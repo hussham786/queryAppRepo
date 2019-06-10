@@ -50,7 +50,7 @@
   </div>
 </nav>
  -->
- <br>
+ 
   <div class="container-fluid text=center">
  <div class="row content">
   
@@ -69,7 +69,7 @@
      </div>
     <div class="col-sm-9 text-left"> 
       <img src="image/avatar.png" alt="Avatar" class="avatar">
-      <h2><small>Hello Quora user </small></h2>
+      <h2><small>Welcome <%=" " + session.getAttribute("userName")%> </small></h2>
       <hr>
 <div class="container">
 <div class="jumbotron">
