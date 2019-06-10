@@ -1,0 +1,33 @@
+
+    .page-footer {
+   position: absolute;
+   width: 10%;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #f1f1f1;
+   color: white;
+   text-align: center;
+}
+.sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+.avatar {
+  vertical-align: middle;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
