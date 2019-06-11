@@ -18,6 +18,16 @@
     .fa-times{
       float: right;
     }
+    
+    #question{
+    	font-size: 22px;
+    	text-decoration: none;
+    }
+    
+    #question:hover{
+    	font-size: 24px;
+    	color: blue;
+    }
 
     /*#myNavbar{
       margin-left: 100px;
@@ -36,12 +46,12 @@
       color: white;
     }
 
-    .active{
+    /* .active{
       border-style: solid;
       border-width: 0px 0px 2px 0px;
       border-color: red;
       width: auto;
-    }
+    } */
 
     .sidenav:hover{
       text-decoration: none;
@@ -101,7 +111,8 @@
     }
 
     #closeIcon {
-      transition: 1s all ease;
+      margin-right: 15px;
+      margin-top: 10px;
     }
 
     .fa-user-circle {

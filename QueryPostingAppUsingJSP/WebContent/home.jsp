@@ -132,19 +132,78 @@
 
 			<div class="col-sm-8 text-left" id="includedContent">
 				<br>
-				<p>
-					<span class="fas fa-user-circle"></span><%=" " + session.getAttribute("userName")%>
-				</p>
-				<textarea id="textId" class="form-control"
-					placeholder="What is your question?"></textarea>
-				<br>
-				<button class="btn btn-primary" id="btn">Post</button>
-				<br> <br>
+
 				<div class="card">
-					<span class="pull-right clickable close-icon" id="closeIcon"
-						data-effect="fadeOut"><i class="fas fa-times"></i></span>
 					<div class="card-header">
-						<h3 id="answer">Your Questions will be posted right here!!!</h3>
+						<p>
+							<span class="fas fa-user-circle"></span><%=" " + session.getAttribute("userName")%>
+						</p>
+						<a href="" data-toggle="modal" id="question"
+							data-target="#myModal">What is your question or link?</a> <br>
+					</div>
+				</div>
+
+				<!-- The Modal -->
+				<div class="modal fade" id="myModal">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content">
+
+							<!-- Modal Header -->
+							<div class="modal-header">
+								<!-- <nav class="navbar navbar-expand-sm bg-light navbar-light"> -->
+								<ul class="nav nav-pills" role="tablist">
+									<li class="nav-item active"><a class="nav-link"
+										data-toggle="pill" href="#addQuestion"> Add Question</a></li>
+									<li class="nav-item"><a class="nav-link"
+										data-toggle="pill" href="#shareLink"> Share Link</a></li>
+								</ul>
+								<!-- </nav> -->
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- Modal body -->
+							<div class="modal-body">
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div id="addQuestion" class="container tab-pane active">
+										<br>
+										<div class="row">
+											<div class="col-sm-2">
+
+												<span class="fas fa-user-circle"></span><%=" " + session.getAttribute("userName") + " "%>
+
+											</div>
+											<div class="col-sm-2">
+												<h6>asked</h6>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+												  <label for="sel1"></label>
+												  <select class="form-control" id="sel1">
+												    <option value="1">Public</option>
+												    <option value="2">Anonymous</option>
+												    <option value="3">Limited</option>
+												  </select>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="shareLink" class="container tab-pane fade">
+										<br>
+										
+									</div>
+								</div>
+							</div>
+
+							<!-- Modal footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary">Add
+									Question</button>
+							</div>
+
+						</div>
 					</div>
 				</div>
 

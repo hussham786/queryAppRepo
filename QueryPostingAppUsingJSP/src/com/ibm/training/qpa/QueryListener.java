@@ -95,7 +95,7 @@ public class QueryListener implements ServletContextListener, ServletContextAttr
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			// Try establishing the connection
-			dbCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/ibmFsdDb", "root", "");
+			dbCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/queryDb", "root", "");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,7 +105,7 @@ public class QueryListener implements ServletContextListener, ServletContextAttr
 		}
 		
 		if (dbCon != null) {
-			System.out.println("Connection to the database established.....");
+			//System.out.println("Connection to the database established.....");
 			serve.getServletContext().setAttribute("dbCon", dbCon);
 		} else {
 			System.out.println("Connection is not established.....");
