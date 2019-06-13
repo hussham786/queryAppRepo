@@ -42,7 +42,7 @@
 		Question question = new Question();
 		UserProfile profile = new UserProfile();
 		Answers answers = new Answers();
-		AllQuestions allQuestions = new AllQuestions();
+		AllQuestions allQuestions = new AllQuestions(); 
 
 		ResultSet resultSetQuestion = null;
 		ResultSet resultSetUser = null;
