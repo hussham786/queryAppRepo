@@ -120,7 +120,7 @@
             class="fab fa-quora"></span></a>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="navbar-nav">
-                <li class="nav-item active" id="home"><a class="nav-link"
+                <!-- <li class="nav-item active" id="home"><a class="nav-link"
                     href="home.jsp"><i class="fas fa-home"></i> Home</a></li>
                 <li class="nav-item" id="ans"><a class="nav-link"
                     href="answer1.jsp" id="answerId" target="_blank"><i
@@ -130,7 +130,7 @@
                         Spaces</a></li>
                 <li class="nav-item" id="notify"><a class="nav-link" ><i
                         class="fas fa-bell"></i> Notifications</a></li>
-                </li>
+                </li> -->
             </ul>
             <form class="form-inline" action="#">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search">
@@ -138,14 +138,14 @@
             </form>
             <div class="right-side">
                 <ul class="navbar-nav text-right">
-                    <li class="nav-item" id="profile"><a class="nav-link"
+                    <!-- <li class="nav-item" id="profile"><a class="nav-link"
                         href="quoraprofile.jsp" id="profileId" target="_blank"><i
                             class="fas fa-user"></i> Profile</a></li>
                     <li class="nav-item" id="cont"><a class="nav-link"
                         href="QuoraContentPage.jsp" id="contentId" target="_blank"><i
-                            class="fas fa-file-alt"></i> Your Content</a></li>
+                            class="fas fa-file-alt"></i> Your Content</a></li> -->
                     <li class="nav-item"><a class="nav-link loginBtn" id = "loginBtn" href="" data-toggle="modal" data-target="#myModal"><i
-                            class="fas fa-sign-out-alt"></i> Log In</a></li>
+                            class="fas fa-sign-in-alt"></i> Log In</a></li>
                 </ul>
             </div>
         </div>
@@ -172,16 +172,16 @@ As present situation of market, getting job in IT Industry is not so difficult b
             </div>
             <div class="modal-body">
 				<p></p>
-                <form class = "form-container" >
+                <form class = "form-container" action="user" id="loginFrm">
                 <h1> Log In </h1>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                     
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                   </div>
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">

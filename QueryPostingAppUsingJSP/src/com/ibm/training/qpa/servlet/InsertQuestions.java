@@ -31,7 +31,7 @@ public class InsertQuestions extends HttpServlet {
 		java.util.Date utilDate = new java.util.Date();
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 		String insertQry = "insert into questionTable(postedBy, type, topic, questionDesc, dateQuestioned) "
-				+ "values(?, ?, ?, ?)";
+				+ "values(?, ?, ?, ?, ?)";
 		
 		// get a reference to the prepared statement
 		try {
