@@ -108,6 +108,9 @@
 
 </head>
 <body>
+<%
+	session.invalidate();
+%>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
         <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#myNavbar">
