@@ -68,8 +68,11 @@
 
      </div>
     <div class="col-sm-9 text-left"> 
-      <img src="image/avatar.png" alt="Avatar" class="avatar">
-      <h2><small>Welcome <%=" " + session.getAttribute("userName")%> </small></h2>
+      <div id="profile-container">
+   <image id="profileImage" src="avatar.png" />
+</div>
+<input id="imageUpload" type="file" name="profile_photo" placeholder="Photo" required="" capture>
+      <h2><small>Hello Quora user </small></h2>
       <hr>
 <div class="container">
 <div class="jumbotron">
@@ -82,7 +85,7 @@
 </div>
       <div class="col-md-1 ">
       <ul class="nav nav-pills nav-stacked">
-        <h3><small>Credentials & Highlights</small></h3>
+        <h3><small>Credentials & Highlights <span class="glyphicon glyphicon-pencil"></small></h3>
         <hr>
         <li><a href="#"> Employee Credential</a></li>
         <li><a href="#"> Education Credentials</a></li>
@@ -100,5 +103,6 @@
   <p>Copy rights by quora.inc</p>
 </div> -->
 </body>
+<script src="profileScript.js"></script>
 </html>
     
