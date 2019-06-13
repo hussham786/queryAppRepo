@@ -216,29 +216,30 @@
 						</div>
 					</div>
 				</form>
-				<%-- 	<%
-					while (resultSet.next()) {
-						resultSetAllQuestion = allQuestions.fetchQuestion(application);
-						while (resultSetAllQuestion.next()) {
-							if (resultSet.getInt("questionId") != resultSetAllQuestion.getInt("questionId")) {
+				<%-- <%
+					resultSetAllQuestion = allQuestions.fetchQuestion(application);
+
+					/* while (resultSetAllQuestion.next()) { */
+					while (resultSet.next() && resultSetAllQuestion.next()) {
+						if (resultSet.getInt("questionId") != resultSetAllQuestion.getInt("questionId")) {
 				%>
 				<div class="card" id="card">
 					<span class="pull-right clickable close-icon" id="closeIcon"
 						data-effect="fadeOut"><i class="fas fa-times"></i></span>
 					<div class="card-header">
-						<h3><%=resultSetAllQuestion.getString("questionDesc") %></h3>
+						<h3><%=resultSetAllQuestion.getString("questionDesc")%></h3>
 					</div>
 					<div class="card-body"></div>
 				</div>
 				<%
 					}
-						}
 					}
+					/* } */
 				%> --%>
 				<br>
 				<%
 				//out.println("views: "+resultSet.first());
-				resultSet.first();
+				resultSet.beforeFirst();
 					int i = 1;
 					if (resultSet != null) {
 						while (resultSet.next()) {
