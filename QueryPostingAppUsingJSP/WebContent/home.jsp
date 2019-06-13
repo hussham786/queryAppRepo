@@ -1,3 +1,9 @@
+<%@page import="com.ibm.training.qpa.AllQuestions"%>
+<%@page import="com.ibm.training.qpa.Answers"%>
+<%@page import="com.ibm.training.qpa.UserProfile"%>
+<%@page import="com.ibm.training.qpa.Question"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="com.mysql.jdbc.Connection"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -26,22 +32,29 @@
 </head>
 <body>
 	<%
-		//Get a reference to the session object
-		//HttpSession session1 = request.getSession();
+		/* if (session.getAttribute("userId") == null)
+			session.setAttribute("userId", request.getAttribute("userId"));
+		if (session.getAttribute("result") == null)
+			session.setAttribute("result", request.getAttribute("result")); */
+		ResultSet resultSet = (ResultSet) session.getAttribute("result");
+			// resultSet.next();
+			 
+		Question question = new Question();
+		UserProfile profile = new UserProfile();
+		Answers answers = new Answers();
+		AllQuestions allQuestions = new AllQuestions();
 
-		//Put some data in the session
-		if (session.getAttribute("userName") == null)
-			session.setAttribute("userName", request.getParameter("email"));
-
-		//session1.setAttribute("password", request.getParameter("password"));
+		ResultSet resultSetQuestion = null;
+		ResultSet resultSetUser = null;
+		ResultSet resultSetAnswer = null;
+		ResultSet resultSetAllQuestion = null;
 	%>
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#myNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<a class="navbar-brand" href="home.html"><span
-			class="fab fa-quora"></span></a>
+		<a class="navbar-brand" href="home.jsp"><span class="fab fa-quora"></span></a>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="navbar-nav">
 				<li class="nav-item active" id="home"><a class="nav-link"
@@ -75,41 +88,13 @@
 		</div>
 	</nav>
 
-	<!-- <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="home.html"><span class="fab fa-quora"></span></a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="answer1.html" id="answerId" target="_blank"><i class="fas fa-edit"></i> Answer</a></li>
-        <li><a href="space.html" id="spaceId"><i class="fas fa-users"></i> Spaces</a></li>
-        <li><a href="#"><i class="fas fa-bell"></i> Notifications</a></li>
-      </ul>
-      <form class="form-inline waves-effect waves-light">
-                <input class="form-control" type="text" placeholder="Search">
-            </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="quoraprofile.html" id="profileId" target="_blank"><i class="fas fa-user"></i> Profile</a></li>
-        <li><a href="QuoraContentPage.html" id="contentId" target="_blank"><i class="fas fa-file-alt"></i> Your Content</a></li>
-        <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
-      </ul>
-    </div>
-  </div>
-</nav> -->
 	<br>
 	<br>
 	<div class="container-fluid text-center" id="externalContent">
 		<div class="row content">
 			<div class="col-sm-2 sidenav">
 				<p>
-					<a href="home.html"><span class="fas fa-sticky-note"></span>
+					<a href="home.jsp"><span class="fas fa-sticky-note"></span>
 						Feed</a>
 				</p>
 				<p>
@@ -136,197 +121,176 @@
 				<div class="card">
 					<div class="card-header">
 						<p>
-							<span class="fas fa-user-circle"></span><%=" " + session.getAttribute("userName")%>
+							<span class="fas fa-user-circle"></span>
+							<%
+								resultSetUser = profile.fetchUser(Integer.parseInt(String.valueOf(session.getAttribute("userId"))), application);
+								while (resultSetUser.next()) {
+							%>
+							<%=" " + resultSetUser.getString("fName") + " " + resultSetUser.getString("lName")%>
+							<%
+								}
+							%>
 						</p>
 						<a href="" data-toggle="modal" id="question"
 							data-target="#myModal">What is your question or link?</a> <br>
 					</div>
 				</div>
+				<form action="insert" method="post">
+					<!-- The Modal -->
+					<div class="modal fade" id="myModal">
+						<div class="modal-dialog modal-dialog-centered modal-lg">
+							<div class="modal-content">
 
-				<!-- The Modal -->
-				<div class="modal fade" id="myModal">
-					<div class="modal-dialog modal-dialog-centered modal-lg">
-						<div class="modal-content">
+								<!-- Modal Header -->
+								<div class="modal-header">
+									<!-- <nav class="navbar navbar-expand-sm bg-light navbar-light"> -->
+									<ul class="nav nav-pills" role="tablist">
+										<li class="nav-item active"><a class="nav-link"
+											data-toggle="pill" href="#addQuestion"> Add Question</a></li>
+										<li class="nav-item"><a class="nav-link"
+											data-toggle="pill" href="#shareLink"> Share Link</a></li>
+									</ul>
+									<!-- </nav> -->
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+								</div>
 
-							<!-- Modal Header -->
-							<div class="modal-header">
-								<!-- <nav class="navbar navbar-expand-sm bg-light navbar-light"> -->
-								<ul class="nav nav-pills" role="tablist">
-									<li class="nav-item active"><a class="nav-link"
-										data-toggle="pill" href="#addQuestion"> Add Question</a></li>
-									<li class="nav-item"><a class="nav-link"
-										data-toggle="pill" href="#shareLink"> Share Link</a></li>
-								</ul>
-								<!-- </nav> -->
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
+								<!-- Modal body -->
+								<div class="modal-body">
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div id="addQuestion" class="container tab-pane active">
 
-							<!-- Modal body -->
-							<div class="modal-body">
-								<!-- Tab panes -->
-								<div class="tab-content">
-									<div id="addQuestion" class="container tab-pane active">
-										<br>
-										<div class="row">
-											<div class="col-sm-2">
+											<div class="row">
+												<%-- <div class="col-sm-2">
 
 												<span class="fas fa-user-circle"></span><%=" " + session.getAttribute("userName") + " "%>
 
-											</div>
-											<div class="col-sm-2">
-												<h6>asked</h6>
-											</div>
-											<div class="col-sm-2">
-												<div class="form-group">
-												  <label for="sel1"></label>
-												  <select class="form-control" id="sel1">
-												    <option value="1">Public</option>
-												    <option value="2">Anonymous</option>
-												    <option value="3">Limited</option>
-												  </select>
+											</div> --%>
+												<!-- <div class="col-sm-2">
+												<h6>Post as : </h6>
+											</div> -->
+												<div class="col-sm-4">
+													<div class="form-group">
+														<label for="type">Post as : </label> <select name="type"
+															class="form-control" id="type">
+															<option value="1">Public</option>
+															<option value="2">Anonymous</option>
+															<option value="3">Limited</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group">
+														<label for="topic">Topic : </label> <select name="topic"
+															class="form-control" id="topic">
+															<option value="1">Bollywood</option>
+															<option value="2">Science</option>
+															<option value="3">Politics</option>
+															<option value="3">Sports</option>
+														</select>
+													</div>
 												</div>
 											</div>
+											<div class="form-group">
+												<textarea class="form-control" rows="3" id="question"
+													placeholder="Start your question with 'What','How','Why',etc."
+													name="question"></textarea>
+											</div>
+										</div>
+										<div id="shareLink" class="container tab-pane fade">
+											<br>
+
 										</div>
 									</div>
-									<div id="shareLink" class="container tab-pane fade">
-										<br>
-										
-									</div>
 								</div>
-							</div>
 
-							<!-- Modal footer -->
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary"
-									data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Add
-									Question</button>
-							</div>
+								<!-- Modal footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary">Add
+										Question</button>
+								</div>
 
+							</div>
 						</div>
 					</div>
+				</form>
+				<%-- 	<%
+					while (resultSet.next()) {
+						resultSetAllQuestion = allQuestions.fetchQuestion(application);
+						while (resultSetAllQuestion.next()) {
+							if (resultSet.getInt("questionId") != resultSetAllQuestion.getInt("questionId")) {
+				%>
+				<div class="card" id="card">
+					<span class="pull-right clickable close-icon" id="closeIcon"
+						data-effect="fadeOut"><i class="fas fa-times"></i></span>
+					<div class="card-header">
+						<h3><%=resultSetAllQuestion.getString("questionDesc") %></h3>
+					</div>
+					<div class="card-body"></div>
 				</div>
+				<%
+					}
+						}
+					}
+				%> --%>
+				<br>
+				<%
+				//out.println("views: "+resultSet.first());
+				resultSet.first();
+					int i = 1;
+					if (resultSet != null) {
+						while (resultSet.next()) {
 
-				<br>
-				<div class="card">
+							resultSetQuestion = question.fetchQuestion(resultSet.getInt("questionId"), application);
+							resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
+							resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
+							
+				%>
+				<div class="card" id="card<%=i%>">
 					<span class="pull-right clickable close-icon" id="closeIcon"
 						data-effect="fadeOut"><i class="fas fa-times"></i></span>
 					<div class="card-header">
-						<h3>What is your experience of Sunday Chor Bazaar in Delhi?
-							Did you buy something awesome that was worth your money? Do the
-							electronics last?</h3>
+						<%
+							while (resultSetQuestion.next()) {
+						%>
+						<h3><%=resultSetQuestion.getString("questionDesc")%></h3>
+						<%
+							}
+						%>
 					</div>
 					<div class="card-body">
 						<p>
-							<span class="fas fa-user-circle"></span> Nupur Kumari, Developer
-							EAS SAP at Tata Consultancy Services (2017-present)
+							<span class="fas fa-user-circle"></span>
+							<%
+								while (resultSetUser.next()) {
+							%>
+							<%=resultSetUser.getString("fName") + " " + resultSetUser.getString("lName") + ", "
+								+ resultSetUser.getString("userDesc")%>
+							<%
+								}
+							%>
 						</p>
-						<p class="para" id="para1">Chor bazaar (Thief market) is one
-							of the tourist attraction in Delhi where people can get stolen
-							product at cheapest cost or can be duped very easily. It is a
-							saying “ If you lose anything in Delhi.</p>
+						<p class="para" id="para1">
+							<%
+								while (resultSetAnswer.next()) {
+							%>
+							<%=resultSetAnswer.getString("answerDesc")%>
+							<%
+								}
+							%>
+						</p>
 					</div>
 				</div>
-				<br>
-				<div class="card">
-					<span class="pull-right clickable close-icon" id="closeIcon"
-						data-effect="fadeOut"><i class="fas fa-times"></i></span>
-					<div class="card-header">
-						<h3>What is the reality of placements at IIM Lucknow?</h3>
-					</div>
-					<div class="card-body">
-						<p>
-							<span class="fas fa-user-circle"></span> Anthony Galli, Writer on
-							History, Psychology, and Society
-						</p>
-						<p class="para">Disclaimer: I have no interest in being the
-							poster-child for IIM Lucknow on Quora, hence anonymous. I just
-							couldn’t stop myself looking at the misleading answers popping up
-							every now & then about IIML, and unlike other “premier” institute
-							alums, IIML people don’t really spend time in doing promotions
-							for the institute, so might as well be me before I start working.</p>
-					</div>
-				</div>
-				<br>
-
-				<div class="card">
-					<span class="pull-right clickable close-icon" id="closeIcon"
-						data-effect="fadeOut"><i class="fas fa-times"></i></span>
-					<div class="card-header">
-						<h3>Can I get some SP Jain review (Dubai, Singapore & Sydney)
-							from alumni & students?</h3>
-					</div>
-					<div class="card-body">
-						<p>
-							<span class="fas fa-user-circle"></span> Taj, Lives in Canada
-						</p>
-						<p class="para">I am Sneha Nagaraju, I was part of the
-							September 2017 GMBA batch and I recently graduated in Singapore.</p>
-						<p class="para">After working for 5 yrs in a leading
-							investment bank, I realised, being a graduate is just not enough
-							in today’s growing competition to succeed in one’s career. I
-							decided to pursue a 1 yr MBA and chose SP Jain because of its tri
-							-city model and its popularity in India and across the world,
-							enabling more work opportunities post MBA.</p>
-						<p class="para">The programme is well planned with the right
-							mix of subjects based purely on market requirements.Most of our
-							professors were highly qualified, experienced and also very
-							approachable. Professors like Ramesh Lakshman sir , Dr.Nawazish
-							Sir were very motivating through out my course and their advices
-							helped me a lot.</p>
-					</div>
-				</div>
-				<br>
-
-				<div class="card">
-					<span class="pull-right clickable close-icon" id="closeIcon"
-						data-effect="fadeOut"><i class="fas fa-times"></i></span>
-					<div class="card-header">
-						<h3>How do you spend your monthly salary?</h3>
-					</div>
-					<div class="card-body">
-						<p>
-							<span class="fas fa-user-circle"></span> Gurtej Singh, lives in
-							New Delhi
-						</p>
-						<p class="para">Female, unmarried, 27, Government Servant,
-							Group B Officer, Living in Bangalore.</p>
-						<p class="para">INR 70000 per month after tax.</p>
-						<p class="para">20k to my parents.. Apparently they spend a
-							major chunk of it on me….</p>
-						<p class="para">6k on a chit fund. I get a consolidated amount
-							of 1 lakh once year. Each year I buy something remarkable out of
-							it… Last year bought some gold…</p>
-						<p class="para">8k to 10k on Sarees. Yes.. my love towards
-							sarees is extreme… sometimes exceeds 10k as well.</p>
-						<p class="para">LIC premia of around 180000 per year, which
-							comes up to 15000 per month. This is totally towards building my
-							post retirement income.</p>
-						<p class="para">When there's an accumulation of more than
-							30000 in my account, I put it into a term deposit account.</p>
-						<p class="para">My Employer provides me the phone and
-							conveyance to and fro.</p>
-						<p class="para">Electricity bill of 2000, Parents medicine
-							bills up to 2000.</p>
-						<p class="para">On books and others refreshments up to 1000
-							per month.</p>
-						<p class="para">My manager and I go out on lunch once every
-							month plus our tea expenses ( both of us are tea addicts) comes
-							up to 1500 - 2000 maximum. Manytimes, this gets funded by my
-							employer.</p>
-						<p class="para">I do all the house hold chores.. so neither
-							any expenditure on domestic help nor towards gym. However, food
-							never stops getting tasty, and I never stop getting fat….</p>
-						<p class="para">Shopping: As and when time permits… Because
-							free time is never guaranteed. Met by my credit card, which gets
-							serviced in full every month.</p>
-						<p class="para">Not saving anything for my wedding. My parents
-							have already saved enough. Moreover, I am looking forward marry a
-							value driven guy in a simple gathering rather than to have a
-							materiaistic marriage. Post wedding savings will start after the
-							wedding. LoL.</p>
-					</div>
-				</div>
+				<%
+					i++;
+						}
+					}
+					else{
+						out.println("Not executing...");
+					}
+				%>
 			</div>
 
 			<div class="col-sm-2 sidenav">
@@ -350,7 +314,6 @@
 				Created by Ganesh, Manikanta, Apurva, Venketesh & Hussham</marquee>
 		</p>
 	</nav>
-
 </body>
 </html>
 

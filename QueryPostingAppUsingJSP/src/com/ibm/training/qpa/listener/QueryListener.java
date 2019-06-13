@@ -1,4 +1,4 @@
-package com.ibm.training.qpa;
+package com.ibm.training.qpa.listener;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

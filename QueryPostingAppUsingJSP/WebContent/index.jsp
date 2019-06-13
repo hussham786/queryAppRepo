@@ -38,7 +38,7 @@
 			<div class="col-md-4 col-sm-4 col-xs-12"></div>
 			<div class="col-md-4 col-sm-4 col-xs-12">
 				<!-- form start  -->
-				<form class="form-container" action="home.jsp" id="loginFrm"
+				<form class="form-container" action="user" id="loginFrm"
 					method="post">
 					<h1>Log In</h1>
 					<div class="form-group">
