@@ -1,21 +1,13 @@
 $(document).ready(function() {
-	
-	/*$('#alltypesId').click(function(e) {
-		
+    
+    $('#quesasked').click(function(e) {
     	e.preventDefault();
-    	$('#changeContent').load('all.jsp');
-    });
-*/
-	
-	$('#quesaskId').click(function(e) {
-		
-    	e.preventDefault();
-    	$('#changeContent').load('queasked.jsp');
+    	$('#changeContent').load('quesasked.jsp');
     });
 
 
     $('#quesfollId').click(function(e) {
-    	e.preventDefault();
+    	e.preventDefault(); 
     	$('#changeContent').load('quefollowed.jsp');
     });
 

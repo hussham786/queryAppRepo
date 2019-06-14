@@ -3,11 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="ISO-8859-1">   
 <title>Quora/yourcontent/...</title>
 </head>
 <body>
-<h4 class="card-title" style = "text-align :center;" >Your Recent Questions</h4><hr>
-
+ 
+    <h4 class="card-title" style = "text-align :center;" >Your Questions</h4><hr>
+ 
 </body>
-</html>   
+</html>

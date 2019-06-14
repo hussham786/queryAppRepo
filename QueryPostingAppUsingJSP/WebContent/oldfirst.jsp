@@ -3,12 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="ISO-8859-1">  
 <title>Quora/yourcontent/...</title>
 </head>
 <body>
- <div class="card-body" style="padding-left: 550px" id="changeContent"><br>
-<h4 class="card-title">Your Old Topics</h4><hr>
-</div>
+ 
+<h4 class="card-title" style = "text-align :center;" >Your past Questions</h4><hr>
 </body>
 </html>

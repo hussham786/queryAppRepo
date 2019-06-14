@@ -5,7 +5,8 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src ="js/contentLayout.js"></script>
 <style>
 
 	/*a:hover {
@@ -20,13 +21,13 @@
   box-sizing:border-box;
 }
 
-	.box{
+	.box{	
 	
 		/*padding-bottom: 100px;*/
 	}
 .left {
 
-  background-color: #cccccc ;
+  
   text-align: center; 
   
   margin-bottom: 20px;
@@ -101,25 +102,25 @@
  <hr> <p><h3>By Content Type </h3></p> 
   <hr>
 
-  <a href="">All Types</a><br><br>
-  <a href="">Questions Asked</a><br><br>
-  <a href="">Questions Followed</a><br><br> 
-  <a href="">Answers</a><br><br>
-  <a href="">Posts</a>
+<!--   <a href="#">All Types</a><br><br> -->
+  <a href="#" id="quesasked">Questions Asked</a><br><br>
+  <a href="#" id ="quesfollId">Questions Followed</a><br><br> 
+  <a href="#" id ="ansId">Answers</a><br><br>
+  <!-- <a href="">Posts</a> -->
  
   <hr><p><h3>By Topic</h3></p>
   <hr>
-  <a href="">All Topics</a><br><br>
+  <a href="#" id="alltopId">All Topics</a><br><br>
 
    <input class="form-control mr-sm-2" type="search" placeholder="Search Quora" aria-label="Search"><br>
   
  <hr> <p><h3>By Year</h3></p><hr>
-  <a href="">All Time</a><br><br>
-  <a href="">2019</a>
+  <a href="#" id="alltimeId">All Time</a><br><br>
+  <a href="#" id="2019Id">2019</a>
   
   <hr> <p><h3>Sort Order</h3></p><hr>
-  <a href="">Newest First</a><br><br>
-  <a href="">Oldest First</a>
+  <a href="#" id="newId">Newest First</a><br><br>
+  <a href="#" id="oldId">Oldest First</a>
 
 
 
@@ -130,9 +131,10 @@
 
 </div>
 
-		 <div class="card-body" style="padding-left: 650px">
-    <h5 class="card-title">Your Content</h5><hr>
-    <p class="card-text"> We have to write the Content here itself....</p></div>
-
+		 <div class="card-body" style="padding-left: 650px" id="changeContent">
+    <h4 class="card-title" style = "text-align :center;" >Your Content</h4><hr>
+    <!-- 
+    <p class="card-text"> We have to write the Content here itself....</p></div> -->
+</div>
 </body>
 </html>

@@ -7,8 +7,7 @@
 <title>Quora/yourcontent/...</title>
 </head>
 <body>
- <div class="card-body" style="padding-left: 550px" id="changeContent"><br>
-<h4 class="card-title">All Topics</h4><hr>
-</div>
+
+<h4 class="card-title" style = "text-align :center;" >Your Topics</h4><hr>
 </body>
-</html>
+</html>   
