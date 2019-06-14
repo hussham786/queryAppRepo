@@ -64,7 +64,7 @@ $(document).ready(function() {
     	$('#externalContent').load('answer1.jsp');
     });
 
-    $('#submitBtn').click(function(event) {
+    /*$('#submitBtn').click(function(event) {
     	var loginId = document.getElementById('exampleInputEmail1').value;
 		var password = document.getElementById('exampleInputPassword1').value;
 
@@ -74,7 +74,7 @@ $(document).ready(function() {
 		} else {
 			alert("User Id and password cannot be blank");
 		}
-    });
+    });*/
 
     $('.close-icon').on('click',function() {
 	  $(this).closest('.card').fadeOut();

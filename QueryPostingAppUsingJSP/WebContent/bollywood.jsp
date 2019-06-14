@@ -32,12 +32,12 @@
 		if (session.getAttribute("result") == null)
 			session.setAttribute("result", request.getAttribute("result")); */
 		ResultSet resultSet = (ResultSet) session.getAttribute("result");
-			// resultSet.next();
-			 
+		// resultSet.next();
+
 		Question question = new Question();
 		UserProfile profile = new UserProfile();
 		Answers answers = new Answers();
-		AllQuestions allQuestions = new AllQuestions(); 
+		AllQuestions allQuestions = new AllQuestions();
 
 		ResultSet resultSetQuestion = null;
 		ResultSet resultSetUser = null;
@@ -78,49 +78,48 @@
 	</div>
 	<br>
 	<%
-				//out.println("views: "+resultSet.first());
-				resultSet.first();
-					int i = 1;
-					if (resultSet != null) {
-						while (resultSet.next()) {
+		//out.println("views: "+resultSet.first());
+		resultSet.beforeFirst();
+		int i = 1;
+		if (resultSet != null) {
+			while (resultSet.next()) {
 
-							resultSetQuestion = question.fetchQuestion(resultSet.getInt("questionId"), application);
-							resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
-							resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
-							
-				%>
+				resultSetQuestion = question.fetchQuestion(resultSet.getInt("questionId"), application);
+				resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
+				resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
+	%>
 	<div class="card">
 		<span class="pull-right clickable close-icon" id="closeIcon"
 			data-effect="fadeOut"><i class="fas fa-times"></i></span>
 		<div class="card-header">
 			<%
-							while (resultSetQuestion.next()) {
-						%>
+				while (resultSetQuestion.next()) {
+			%>
 			<h3><%=resultSetQuestion.getString("questionDesc")%></h3>
 			<%
-							}
-						%>
+				}
+			%>
 		</div>
 		<div class="card-body">
 			<p>
 				<span class="fas fa-user-circle"></span>
 				<%
-								while (resultSetUser.next()) {
-							%>
+					while (resultSetUser.next()) {
+				%>
 				<%=resultSetUser.getString("fName") + " " + resultSetUser.getString("lName") + ", "
 								+ resultSetUser.getString("userDesc")%>
 				<%
-								}
-							%>
+					}
+				%>
 			</p>
 			<p class="para" id="para1">
 				<%
-								while (resultSetAnswer.next()) {
-							%>
+					while (resultSetAnswer.next()) {
+				%>
 				<%=resultSetAnswer.getString("answerDesc")%>
 				<%
-								}
-							%>
+					}
+				%>
 			</p>
 		</div>
 		<div class="card-footer">
@@ -141,13 +140,12 @@
 		</div>
 	</div>
 	<%
-					i++;
-						}
-					}
-					else{
-						out.println("Not executing...");
-					}
-				%>
+		i++;
+			}
+		} else {
+			out.println("Not executing...");
+		}
+	%>
 
 
 </body>

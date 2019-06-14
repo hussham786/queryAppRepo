@@ -172,7 +172,7 @@ As present situation of market, getting job in IT Industry is not so difficult b
             </div>
             <div class="modal-body">
 				<p></p>
-                <form class = "form-container" action="user" id="loginFrm">
+                <form class = "form-container" action="user" id="loginFrm" method="post">
                 <h1> Log In </h1>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
@@ -195,7 +195,7 @@ As present situation of market, getting job in IT Industry is not so difficult b
                 
             </div>
                   <br>
-                  <button type="submit"  class="btn btn-success">Submit</button>
+                  <button type="submit" id="submitBtn" class="btn btn-success">Log In</button>
                 </form>
             
             <!-- form end -->

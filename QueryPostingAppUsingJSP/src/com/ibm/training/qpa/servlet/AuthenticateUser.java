@@ -32,6 +32,7 @@ public class AuthenticateUser extends HttpServlet {
 		
 		// get the prepared statement reference
 		try {
+			//System.out.println("in authenticate servlet" + this.dbCon.prepareStatement(fetchQry));
 			this.theStatement = this.dbCon.prepareStatement(fetchQry);
 			
 			// set the values for prepared statement
