@@ -172,7 +172,7 @@ As present situation of market, getting job in IT Industry is not so difficult b
             </div>
             <div class="modal-body">
 				<p></p>
-                <form class = "form-container" action="user" id="loginFrm" method="post">
+                <form class = "form-container" action="user" id="loginFrm" method="post" onsubmit="return validateForm()">
                 <h1> Log In </h1>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
