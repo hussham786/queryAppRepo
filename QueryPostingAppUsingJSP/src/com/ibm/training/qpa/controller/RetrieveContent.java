@@ -1,4 +1,4 @@
-package com.ibm.training.qpa.servlet;
+package com.ibm.training.qpa.controller;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ibm.training.qpa.model.QueryDao;
 import com.mysql.jdbc.Connection;
 
 /**
@@ -19,31 +20,15 @@ import com.mysql.jdbc.Connection;
  */
 @WebServlet("/retrieve")
 public class RetrieveContent extends HttpServlet {
-	PreparedStatement theStatement;
-	Connection dbCon;
+	QueryDao dao = new QueryDao();
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Get db connection object from servlet context
-		dbCon = (Connection) getServletContext().getAttribute("dbCon");
-		HttpSession session = request.getSession();
-		//String userId = (String) request.getAttribute("userId");
-		String fetchQry = "select * from contentTable";
 		
-		try {
-			this.theStatement = this.dbCon.prepareStatement(fetchQry);
+		dao.showContentData(request, response, getServletContext());
+		response.sendRedirect("home.jsp");
 			
-			// execute the query
-			ResultSet resultSet = this.theStatement.executeQuery();
-			session.setAttribute("result", resultSet);
-			session.setAttribute("userId", request.getAttribute("userId"));
-			//request.getRequestDispatcher("home.jsp").forward(request, response);
-			response.sendRedirect("home.jsp");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**

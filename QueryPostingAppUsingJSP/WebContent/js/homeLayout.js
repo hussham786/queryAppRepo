@@ -75,10 +75,62 @@ $(document).ready(function() {
 			alert("User Id and password cannot be blank");
 		}
     });*/
-
+    
+    $('[data-toggle="popover"]').popover();
+    
     $('.close-icon').on('click',function() {
 	  $(this).closest('.card').fadeOut();
 	});
-
+    
+   /* $('.ans').click(function(){
+        $(this).toggle();
+    	//console.log("called : ");
+      });*/
+//    var id = document.getElementById('hiddenVal').value;
+//    console.log("id : " + id);
+//    if(id != null && id != ""){
+//    	ClassicEditor
+//	    .create( document.querySelector( '#editor' ) )
+//	    .catch( error => {
+//	        console.error( error );
+//	    } );
+//    }
 
   });
+
+function fetchData(){
+	console.log("called.....");
+	var searchData = document.getElementById('search').value;
+	console.log("data....." + searchData);
+	$.ajax({url: "search?question="+searchData, success: function(response){
+	    $("#showData").html(response);
+	  }});
+}
+var counter = 1;
+function openEditor(id) {
+	//var x = document.getElementById("myDiv" + id);
+//	x.toggle();
+	//alert
+	$('#togDiv' + id).toggle();
+	//console.log(id);
+//	$('#myDiv' + id).show('slow',function(){
+//		ClassicEditor
+//	    .create( document.querySelector( '#editor' ) )
+//	    .catch( error => {
+//	        console.error( error );
+//	    } );
+//	});
+	
+	console.log("hiddenVal" + id +" : " + document.getElementById("hiddenVal" + id).value);
+	    if(document.getElementById("hiddenVal" + id).value == 1) {
+	  	  ClassicEditor
+	  	    .create( document.querySelector( '#editor' + id ) )
+	  	    .catch( error => {
+	  	        console.error( error );
+	  	    } );
+	  	  }
+	    counter++;
+	    document.getElementById("hiddenVal" + id).value = counter;
+	  
+	//counter++;
+}

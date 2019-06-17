@@ -1,30 +1,19 @@
 package com.ibm.training.qpa;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.servlet.ServletContext;
 
-import com.mysql.jdbc.Connection;
+import com.ibm.training.qpa.model.QueryDao;
 
 public class Question {
-	Connection dbCon;
-	ResultSet resultSetQuestion;
-	PreparedStatement theStatement;
+	QueryDao dao = new QueryDao();
+
 	public ResultSet fetchQuestion(int questionId, ServletContext context) {
-		dbCon = (Connection) context.getAttribute("dbCon");
-		String fetchQry = "select * from questionTable where questionId = ?";
-		// set the values for prepared statement
-		try {
-			this.theStatement = this.dbCon.prepareStatement(fetchQry);
-			
-			this.theStatement.setInt(1, questionId);
-			resultSetQuestion = this.theStatement.executeQuery();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resultSetQuestion;
+
+		return dao.fetchQuestion(questionId, context);
+	}
+	
+	public ResultSet fetchQuestionTopicWise(int questionId, int topic, ServletContext context) {
+		return dao.fetchQuestionTopicWise(questionId, topic, context);
 	}
 }

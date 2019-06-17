@@ -1,4 +1,4 @@
-package com.ibm.training.qpa.servlet;
+package com.ibm.training.qpa.controller;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -14,42 +14,34 @@ import javax.servlet.http.HttpServletResponse;
 import com.mysql.jdbc.Connection;
 
 /**
- * Servlet implementation class AuthenticateUser
+ * Servlet implementation class FetchDataOnSearch
  */
-@WebServlet("/user")
-public class AuthenticateUser extends HttpServlet {
+@WebServlet("/search")
+public class FetchDataOnSearch extends HttpServlet {
 	PreparedStatement theStatement;
 	Connection dbCon;
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Get db connection object from servlet context
 		dbCon = (Connection) getServletContext().getAttribute("dbCon");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String fetchQry = "select * from userTable where email = ? and password = ?";
+		String question = request.getParameter("question");
+		//System.out.println("question in servlet : " + question);
+		response.setContentType("text/html");
+		String fetchQry = "select * from questionTable where lower(questionDesc) like ?";
 		
-		// get the prepared statement reference
 		try {
-			//System.out.println("in authenticate servlet" + this.dbCon.prepareStatement(fetchQry));
 			this.theStatement = this.dbCon.prepareStatement(fetchQry);
 			
-			// set the values for prepared statement
-			this.theStatement.setString(1, email);
-			this.theStatement.setString(2, password);
+			this.theStatement.setString(1, "%" +  question + "%");
 			
-			// execute the query
 			ResultSet resultSet = this.theStatement.executeQuery();
-			
-			while (resultSet.next()) {
-				if(resultSet.getString("email").equals(email) && resultSet.getString("password").equals(password)) {
-					request.setAttribute("userId", resultSet.getInt("userId"));
-					request.getRequestDispatcher("retrieve").forward(request, response);
-				} else {
-					response.getWriter().println("Invalid UserId Password");
-					request.getRequestDispatcher("index.jsp").forward(request, response);
-				}
+			//System.out.println(resultSet.first());
+			while(resultSet.next()) {
+				//System.out.println(resultSet.getString("questionDesc"));
+				response.getWriter().append("<a href=''>" + resultSet.getString("questionDesc") +"</a>" + "<br>");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

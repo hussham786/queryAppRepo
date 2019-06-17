@@ -83,42 +83,49 @@
 		int i = 1;
 		if (resultSet != null) {
 			while (resultSet.next()) {
-
-				resultSetQuestion = question.fetchQuestion(resultSet.getInt("questionId"), application);
-				resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
-				resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
+				int topic = 1;
+				resultSetQuestion = question.fetchQuestionTopicWise(resultSet.getInt("questionId"), topic, application);
+				while (resultSetQuestion.next()) {
 	%>
 	<div class="card">
 		<span class="pull-right clickable close-icon" id="closeIcon"
 			data-effect="fadeOut"><i class="fas fa-times"></i></span>
 		<div class="card-header">
 			<%
-				while (resultSetQuestion.next()) {
+				
+					resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
+					while(resultSetAnswer.next())
+						resultSetUser = profile.fetchUser(resultSetAnswer.getInt("answeredBy"), application);
 			%>
 			<h3><%=resultSetQuestion.getString("questionDesc")%></h3>
 			<%
-				}
+				
 			%>
 		</div>
 		<div class="card-body">
 			<p>
 				<span class="fas fa-user-circle"></span>
 				<%
+				if(resultSetUser != null){
 					while (resultSetUser.next()) {
 				%>
 				<%=resultSetUser.getString("fName") + " " + resultSetUser.getString("lName") + ", "
 								+ resultSetUser.getString("userDesc")%>
 				<%
 					}
+				}
 				%>
 			</p>
 			<p class="para" id="para1">
 				<%
+				if(resultSetAnswer != null){
 					while (resultSetAnswer.next()) {
 				%>
 				<%=resultSetAnswer.getString("answerDesc")%>
 				<%
 					}
+				
+				}
 				%>
 			</p>
 		</div>
@@ -140,6 +147,7 @@
 		</div>
 	</div>
 	<%
+				}
 		i++;
 			}
 		} else {

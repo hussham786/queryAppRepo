@@ -1,3 +1,7 @@
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.ibm.training.qpa.AllQuestions"%>
 <%@page import="com.ibm.training.qpa.Answers"%>
 <%@page import="com.ibm.training.qpa.UserProfile"%>
@@ -27,22 +31,25 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/12.2.0/classic/ckeditor.js"></script>
+
 <link rel="stylesheet" href="css/homeStyle.css">
 <script src="js/homeLayout.js"></script>
 </head>
 <body>
+
 	<%
 		/* if (session.getAttribute("userId") == null)
 			session.setAttribute("userId", request.getAttribute("userId"));
 		if (session.getAttribute("result") == null)
 			session.setAttribute("result", request.getAttribute("result")); */
 		ResultSet resultSet = (ResultSet) session.getAttribute("result");
-			// resultSet.next();
-			 
+		// resultSet.next();
+
 		Question question = new Question();
 		UserProfile profile = new UserProfile();
 		Answers answers = new Answers();
-		AllQuestions allQuestions = new AllQuestions(); 
+		AllQuestions allQuestions = new AllQuestions();
 
 		ResultSet resultSetQuestion = null;
 		ResultSet resultSetUser = null;
@@ -69,9 +76,11 @@
 						class="fas fa-bell"></i> Notifications</a></li>
 				</li>
 			</ul>
-			<form class="form-inline" action="#">
-				<input class="form-control mr-sm-2" type="text" placeholder="Search">
-				<button class="btn btn-success" type="submit">Search</button>
+			<form class="form-inline" action="search" oninput="fetchData();">
+				<input class="form-control mr-sm-2" type="text" placeholder="Search"
+					id="search" data-toggle="dropdown" data-target="#showData">
+
+				<!-- <button class="btn btn-success" type="submit">Search</button> -->
 			</form>
 			<div class="right-side">
 				<ul class="navbar-nav text-right">
@@ -88,7 +97,17 @@
 		</div>
 	</nav>
 
+
+	<!-- <div id="showData"></div> -->
 	<br>
+	<br>
+	<div class="dropdown">
+		<div class="dropdown-menu" aria-labelledby="search" id="showData">
+			<!-- <a class="dropdown-item" href="#">Action</a> <a
+							class="dropdown-item" href="#">Another action</a> <a
+							class="dropdown-item" href="#">Something else here</a> -->
+		</div>
+	</div>
 	<br>
 	<div class="container-fluid text-center" id="externalContent">
 		<div class="row content">
@@ -123,7 +142,8 @@
 						<p>
 							<span class="fas fa-user-circle"></span>
 							<%
-								resultSetUser = profile.fetchUser(Integer.parseInt(String.valueOf(session.getAttribute("userId"))), application);
+								resultSetUser = profile.fetchUser(Integer.parseInt(String.valueOf(session.getAttribute("userId"))),
+										application);
 								while (resultSetUser.next()) {
 							%>
 							<%=" " + resultSetUser.getString("fName") + " " + resultSetUser.getString("lName")%>
@@ -216,12 +236,24 @@
 						</div>
 					</div>
 				</form>
-				<%-- <%
-					resultSetAllQuestion = allQuestions.fetchQuestion(application);
+				<br>
+				<%
+					resultSetAllQuestion = allQuestions.fetchQuestion(Integer.parseInt(String.valueOf(session.getAttribute("userId"))), application);
 
-					/* while (resultSetAllQuestion.next()) { */
-					while (resultSet.next() && resultSetAllQuestion.next()) {
-						if (resultSet.getInt("questionId") != resultSetAllQuestion.getInt("questionId")) {
+					/* while (resultSetAllQuestion.next()) { */ 
+					int c = 1;
+					while (resultSetAllQuestion.next()) {
+						Calendar calendar = new GregorianCalendar();
+						Date utilDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0")
+								.parse(String.valueOf(resultSetAllQuestion.getString("dateQuestioned")));
+						Date currentDate = new Date();
+						calendar.setTime(utilDate);
+						Date quesDate = calendar.getTime();
+						calendar.setTime(currentDate);
+						Date currDate = calendar.getTime();
+						if (quesDate.getYear() == currDate.getYear()) {
+							if (quesDate.getMonth() == currDate.getMonth()) {
+								if (quesDate.getDate() == currDate.getDate()) {
 				%>
 				<div class="card" id="card">
 					<span class="pull-right clickable close-icon" id="closeIcon"
@@ -229,17 +261,70 @@
 					<div class="card-header">
 						<h3><%=resultSetAllQuestion.getString("questionDesc")%></h3>
 					</div>
-					<div class="card-body"></div>
+					<div class="card-body">
+					
+						<h6>
+							Posted
+							<%
+								if (quesDate.getHours() == currDate.getHours()) {
+									if (quesDate.getMinutes() == currDate.getMinutes()) {
+										if (quesDate.getSeconds() == currDate.getSeconds()) {
+							%>
+							just now
+							<%
+								} else {
+							%>
+							<%=currDate.getSeconds() - quesDate.getSeconds()%>
+							seconds ago
+							<%
+								}
+								} else {
+							%>
+							<%=currDate.getMinutes() - quesDate.getMinutes()%>
+							minutes ago
+							<%
+								}
+								} else {
+							%>
+							<%=currDate.getHours() - quesDate.getHours()%>
+							hours ago
+							<%
+								}
+							%>
+							&nbsp;&nbsp;&nbsp;No answer yet
+						</h6>
+						
+					</div>
+					<div class="card-footer">
+						<nav class="navbar navbar-expand-sm bg-light navbar-light">
+							<ul class="navbar-nav">
+								<li class="nav-item "><a class="ans nav-link" href="#" onclick="openEditor(<%=c %>)" id="ans<%=c%>"><span class="fas fa-edit"></span>
+										Answer</a></li>
+							</ul>
+						</nav>
+						<input type="hidden" id="hiddenVal<%=c%>" value="1"/>
+						<%request.setAttribute("questionId", resultSetAllQuestion.getInt("questionId")); %>
+						<form action="insertans" id="ansForm<%=c%>" method="post">
+						<div id="togDiv<%=c%>" style="display: none;">
+							<textarea name="content" id="editor<%=c%>"></textarea><br>
+							<button type="submit" class="btn btn-primary">Submit
+								Answer</button>
+						</div>
+						</form>
+					</div>
 				</div>
 				<%
 					}
+							}
+						}
+					c++;
 					}
 					/* } */
-				%> --%>
+				%>
 				<br>
 				<%
-				//out.println("views: "+resultSet.first());
-				resultSet.beforeFirst();
+					//out.println("views: "+resultSet.first());
+					resultSet.beforeFirst();
 					int i = 1;
 					if (resultSet != null) {
 						while (resultSet.next()) {
@@ -247,7 +332,6 @@
 							resultSetQuestion = question.fetchQuestion(resultSet.getInt("questionId"), application);
 							resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
 							resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
-							
 				%>
 				<div class="card" id="card<%=i%>">
 					<span class="pull-right clickable close-icon" id="closeIcon"
@@ -273,10 +357,22 @@
 								}
 							%>
 						</p>
+						<%
+							while (resultSetAnswer.next()) {
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+										//SimpleDateFormat timeFormat = new SimpleDateFormat("HH : mm").parse(resultSetAnswer.getString("answerDesc"));
+										Date utilDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0")
+												.parse(String.valueOf(resultSetAnswer.getString("dateAnswered")));
+										//String ansDate = simpleDateFormat.format(resultSetAnswer.getDate("dateAnswered"));
+										//String ansTime = timeFormat.format(utilDate);
+										//System.out.println("date and time : " + sqlDate.getTime());
+						%>
 						<p class="para" id="para1">
-							<%
-								while (resultSetAnswer.next()) {
-							%>
+							Answered on
+							<%=utilDate%>
+						</p>
+						<p class="para" id="para1">
+
 							<%=resultSetAnswer.getString("answerDesc")%>
 							<%
 								}
@@ -287,8 +383,7 @@
 				<%
 					i++;
 						}
-					}
-					else{
+					} else {
 						out.println("Not executing...");
 					}
 				%>

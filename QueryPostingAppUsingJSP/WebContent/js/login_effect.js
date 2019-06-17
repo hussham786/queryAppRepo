@@ -31,7 +31,8 @@ function validateForm(){
 		//document.getElementById("loginFrm").submit();
 		return true;
 	} else {
-		alert("User Id and password cannot be blank");
+		//alert("User Id and password cannot be blank");
+		$('#blank').html('<h5 style="color:red;">User Id or password cannot be blank</h5>');
 		//document.getElementById("loginFrm").reset();
 		return false;
 	}
