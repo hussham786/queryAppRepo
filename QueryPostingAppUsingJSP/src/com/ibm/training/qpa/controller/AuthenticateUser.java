@@ -36,7 +36,7 @@ public class AuthenticateUser extends HttpServlet {
 		} else {
 			//response.getWriter().append("<h3>EmailId and Password does not exists!</h3>");
 			request.setAttribute("notValid", "<h5 style='color:red;'>Email Id and Password does not exists!</h5>");
-			request.getRequestDispatcher("index.jsp").include(request, response);
+			request.getRequestDispatcher("loginAndSignUp.jsp").include(request, response);
 		}
 	}
 

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ibm.training.qpa.bean.Answer;
+import com.ibm.training.qpa.bean.Comment;
+import com.ibm.training.qpa.bean.Content;
 import com.ibm.training.qpa.bean.Question;
 import com.ibm.training.qpa.bean.User;
 
@@ -21,6 +23,8 @@ public interface QueryDaoInteface {
 	public ResultSet fetchQuestionTopicWise(int questionId, int topic, ServletContext context);
 	public ResultSet fetchAnswerTopicWise(int questionId, ServletContext context);
 	public boolean insertAnswer(HttpServletRequest request, HttpServletResponse response, ServletContext context, Answer answer);
-	
-
+	public boolean insertContent(HttpServletRequest request, HttpServletResponse response, ServletContext context, Content content);
+	public int addComment(HttpServletRequest request, HttpServletResponse response, ServletContext context, Comment comment);
+	public ResultSet fetchComment(int questionId, ServletContext context);
+	public boolean deleteComment(int commentId, ServletContext context);
 }

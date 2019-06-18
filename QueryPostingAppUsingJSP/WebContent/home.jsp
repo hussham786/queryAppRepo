@@ -1,3 +1,5 @@
+<%@page import="com.ibm.training.qpa.DateDifference"%>
+<%@page import="com.ibm.training.qpa.Comments"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
@@ -50,11 +52,13 @@
 		UserProfile profile = new UserProfile();
 		Answers answers = new Answers();
 		AllQuestions allQuestions = new AllQuestions();
+		Comments comments = new Comments();
 
 		ResultSet resultSetQuestion = null;
 		ResultSet resultSetUser = null;
 		ResultSet resultSetAnswer = null;
 		ResultSet resultSetAllQuestion = null;
+		ResultSet resultComment = null;
 	%>
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -90,7 +94,7 @@
 					<li class="nav-item" id="cont"><a class="nav-link"
 						href="QuoraContentPage.jsp" id="contentId" target="_blank"><i
 							class="fas fa-file-alt"></i> Your Content</a></li>
-					<li class="nav-item"><a class="nav-link" href="index.jsp"><i
+					<li class="nav-item"><a class="nav-link" href="loginAndSignUp.jsp"><i
 							class="fas fa-sign-out-alt"></i> Log Out</a></li>
 				</ul>
 			</div>
@@ -256,9 +260,19 @@
 								if (quesDate.getDate() == currDate.getDate()) {
 				%>
 				<div class="card" id="card">
-					<span class="pull-right clickable close-icon" id="closeIcon"
-						data-effect="fadeOut"><i class="fas fa-times"></i></span>
 					<div class="card-header">
+					<p>
+							<span class="fas fa-user-circle"></span>
+							<%
+								resultSetUser = profile.fetchUser(Integer.parseInt(String.valueOf(session.getAttribute("userId"))),
+										application);
+								while (resultSetUser.next()) {
+							%>
+							<%=" " + resultSetUser.getString("fName") + " " + resultSetUser.getString("lName")%>
+							<%
+								}
+							%>
+						</p>
 						<h3><%=resultSetAllQuestion.getString("questionDesc")%></h3>
 					</div>
 					<div class="card-body">
@@ -266,31 +280,26 @@
 						<h6>
 							Posted
 							<%
-								if (quesDate.getHours() == currDate.getHours()) {
-									if (quesDate.getMinutes() == currDate.getMinutes()) {
-										if (quesDate.getSeconds() == currDate.getSeconds()) {
-							%>
-							just now
-							<%
+							DateDifference dateDifference = new DateDifference();
+							String dateDiff = dateDifference.dateDiff(resultSetAllQuestion.getString("dateQuestioned"));
+							String[] dateArr = dateDiff.split(",");
+							String time = "";
+							
+							if(dateArr[0].equals("0")) {
+								if(dateArr[1].equals("0")) {
+									if(dateArr[2].equals("0")) {
+										time = "just now";
+									} else {
+										time = dateArr[2] + " seconds ago";
+									}
 								} else {
-							%>
-							<%=currDate.getSeconds() - quesDate.getSeconds()%>
-							seconds ago
-							<%
+									time = dateArr[1] + " minutes ago";
 								}
-								} else {
+							} else {
+								time = dateArr[0] + " hours ago";
+							}
 							%>
-							<%=currDate.getMinutes() - quesDate.getMinutes()%>
-							minutes ago
-							<%
-								}
-								} else {
-							%>
-							<%=currDate.getHours() - quesDate.getHours()%>
-							hours ago
-							<%
-								}
-							%>
+							<%=time %>
 							&nbsp;&nbsp;&nbsp;No answer yet
 						</h6>
 						
@@ -303,8 +312,9 @@
 							</ul>
 						</nav>
 						<input type="hidden" id="hiddenVal<%=c%>" value="1"/>
-						<%request.setAttribute("questionId", resultSetAllQuestion.getInt("questionId")); %>
 						<form action="insertans" id="ansForm<%=c%>" method="post">
+						<input type="hidden" name="questionId" id="questionId" value="<%=resultSetAllQuestion.getInt("questionId")%>">
+						<input type="hidden" name="postedBy" id="postedBy" value="<%=resultSetAllQuestion.getInt("postedBy")%>">
 						<div id="togDiv<%=c%>" style="display: none;">
 							<textarea name="content" id="editor<%=c%>"></textarea><br>
 							<button type="submit" class="btn btn-primary">Submit
@@ -326,6 +336,7 @@
 					//out.println("views: "+resultSet.first());
 					resultSet.beforeFirst();
 					int i = 1;
+					
 					if (resultSet != null) {
 						while (resultSet.next()) {
 
@@ -333,8 +344,11 @@
 							resultSetUser = profile.fetchUser(resultSet.getInt("answeredBy"), application);
 							resultSetAnswer = answers.fetchAnswer(resultSet.getInt("answerId"), application);
 				%>
+				<div id="unHide<%=i %>" style="display: none;">
+					<p>You've hidden this story<a href="" onclick="unHide(<%=i%>,<%=resultSet.getInt("contentId")%>)"> Undo</a></p>
+				</div>
 				<div class="card" id="card<%=i%>">
-					<span class="pull-right clickable close-icon" id="closeIcon"
+					<span class="pull-right clickable close-icon" id="closeIcon<%=i %>" onclick="toggleContent(<%=i%>,<%=resultSet.getInt("contentId")%>)"
 						data-effect="fadeOut"><i class="fas fa-times"></i></span>
 					<div class="card-header">
 						<%
@@ -378,6 +392,52 @@
 								}
 							%>
 						</p>
+					</div>
+					<div class="card-footer">
+						<form action="#" method="post" onload="postComment(<%=i%>)">
+							<p>
+								<span class="fas fa-user-circle"></span>
+								<input type="hidden" name="questionId" id="questionId<%=i %>" value="<%=resultSet.getInt("questionId")%>"> 
+								<input type="text"
+									name="comment" class="comment-class" id="comment<%=i%>"
+									placeholder="Add a comment..." oninput="generateButton(<%=i%>)">
+								<button type="button" id="btnComment<%=i%>"
+									class="btn btn-primary" style="display: none;" onclick="postComment(<%=i%>)">Add
+									Comment</button>
+
+							</p>
+						</form>
+						<%-- <%
+							resultComment = comments.fetchComment(resultSet.getInt("questionId"), application);
+									if (resultComment != null) {
+										while (resultComment.next()) {
+											resultSetUser = profile.fetchUser(resultComment.getInt("commentedBy"), application);
+						%> --%>
+						
+						<div id="commDiv<%=i%>">
+							<%-- <p>
+							<span class="fas fa-user-circle"></span>
+							<%
+								while (resultSetUser.next()) {
+							%>
+							<%=resultSetUser.getString("fName") + " " + resultSetUser.getString("lName") + ", "
+								+ resultSetUser.getString("userDesc")%>
+							<%
+								}
+							%>
+						</p> --%>
+						<%-- <p>
+							Posted <%=resultComment.getString("dateCommented") %>
+						</p> --%>
+						<%-- <p id="comm<%=i%>">
+							<%=resultComment.getString("comment") %>
+						</p> --%>
+						</div>
+						<%-- <%
+							}
+									}
+						%> --%>
+
 					</div>
 				</div>
 				<%

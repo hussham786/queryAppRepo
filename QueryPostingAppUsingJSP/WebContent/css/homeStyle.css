@@ -112,7 +112,7 @@ img {
 	align-items: center;
 }
 
-#closeIcon {
+.close-icon {
 	margin-right: 15px;
 	margin-top: 10px;
 }

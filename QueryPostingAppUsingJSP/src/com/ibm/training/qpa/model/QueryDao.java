@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ibm.training.qpa.bean.Answer;
+import com.ibm.training.qpa.bean.Comment;
 import com.ibm.training.qpa.bean.Content;
 import com.ibm.training.qpa.bean.Question;
 import com.ibm.training.qpa.bean.User;
@@ -64,11 +65,11 @@ public class QueryDao implements QueryDaoInteface {
 		dbCon = (Connection) context.getAttribute("dbCon");
 
 		HttpSession session = request.getSession();
-		String fetchQry = "select * from questionTable q, contentTable c, answerTable a where q.questionId = c.questionId and c.answerId = a.answerId order by a.dateAnswered desc";
+		String fetchQry = "select * from questionTable q, contentTable c, answerTable a where q.questionId = c.questionId and c.answerId = a.answerId and c.hide = ? order by a.dateAnswered desc";
 
 		try {
 			this.theStatement = this.dbCon.prepareStatement(fetchQry);
-
+			this.theStatement.setBoolean(1, false);
 			// execute the query
 			ResultSet resultSet = this.theStatement.executeQuery();
 			session.setAttribute("result", resultSet);
@@ -213,8 +214,136 @@ public class QueryDao implements QueryDaoInteface {
 	@Override
 	public boolean insertAnswer(HttpServletRequest request, HttpServletResponse response, ServletContext context,
 			Answer answer) {
-		// TODO Auto-generated method stub
-		return false;
+		// Get db connection object from servlet context
+				dbCon = (Connection) context.getAttribute("dbCon");
+				boolean flag = false;
+				String insertQry = "insert into answerTable(answerDesc, questionId, answeredBy, postedBy) " + "values(?, ?, ?, ?)";
+				try {
+					this.theStatement = this.dbCon.prepareStatement(insertQry);
+
+					// set the values for prepared statement
+					this.theStatement.setString(1, answer.getAnswerDesc());
+					this.theStatement.setInt(2, answer.getQuestionId());
+					this.theStatement.setInt(3, answer.getAnsweredBy());
+					this.theStatement.setInt(4, answer.getPostedBy());
+					// this.theStatement.setDate(5, sqlDate);
+
+					// execute the query
+					if (this.theStatement.executeUpdate() > 0) {
+						//flag = true;
+						resultSetAnswer = fetchAnswerTopicWise(answer.getQuestionId(), context);
+						if(resultSetAnswer != null) {
+							while(resultSetAnswer.next()) {
+								Content content = new Content();
+								content.setAnsweredBy(resultSetAnswer.getInt("answeredBy"));
+								content.setAnswerId(resultSetAnswer.getInt("answerId"));
+								content.setQuestionId(resultSetAnswer.getInt("questionId"));
+								content.setPostedBy(resultSetAnswer.getInt("postedBy"));
+								content.setHide(false);
+								flag = insertContent(request, response, context, content);
+							}
+						}
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				return flag;
 	}
+
+	@Override
+	public boolean insertContent(HttpServletRequest request, HttpServletResponse response, ServletContext context,
+			Content content) {
+		// Get db connection object from servlet context
+				dbCon = (Connection) context.getAttribute("dbCon");
+				boolean flag = false;
+				HttpSession session = request.getSession();
+				String insertQry = "insert into contentTable(questionId, answerId, postedBy, answeredBy, hide, currentUser) " + "values(?, ?, ?, ?, ?, ?)";
+				try {
+					this.theStatement = this.dbCon.prepareStatement(insertQry);
+
+					// set the values for prepared statement
+					this.theStatement.setInt(1, content.getQuestionId());
+					this.theStatement.setInt(2, content.getAnswerId());
+					this.theStatement.setInt(3, content.getPostedBy());
+					this.theStatement.setInt(4, content.getAnsweredBy());
+					this.theStatement.setBoolean(5, content.isHide());
+					this.theStatement.setInt(6, Integer.parseInt(String.valueOf(session.getAttribute("userId"))));
+					// this.theStatement.setDate(5, sqlDate);
+
+					// execute the query
+					if (this.theStatement.executeUpdate() > 0) {
+						flag = true;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				return flag;
+	}
+
+	@Override
+	public int addComment(HttpServletRequest request, HttpServletResponse response, ServletContext context,
+			Comment comment) {
+		dbCon = (Connection) context.getAttribute("dbCon");
+		String insertQry = "insert into commentsTable(questionId, comment, commentedBy) " + "values(?, ?, ?)";
+		try {
+			this.theStatement = this.dbCon.prepareStatement(insertQry);
+			
+			this.theStatement.setInt(1, comment.getQuestionId());
+			this.theStatement.setString(2, comment.getComment());
+			this.theStatement.setInt(3, comment.getCommentedBy());
+			
+			// execute the query
+			if (this.theStatement.executeUpdate() > 0) {
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return comment.getQuestionId();
+	}
+
+	@Override
+	public ResultSet fetchComment(int questionId, ServletContext context) {
+		dbCon = (Connection) context.getAttribute("dbCon");
+		String fetchQry = "select * from commentsTable where questionId = ? order by dateCommented desc";
+
+		try {
+			this.theStatement = this.dbCon.prepareStatement(fetchQry);
+			this.theStatement.setInt(1, questionId);
+			resultSet = this.theStatement.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultSet;
+	}
+
+	@Override
+	public boolean deleteComment(int commentId, ServletContext context) {
+		dbCon = (Connection) context.getAttribute("dbCon");
+		String deleteQry = "delete from commentsTable where commentId = ?";
+		boolean flag = false;
+		try {
+			this.theStatement = this.dbCon.prepareStatement(deleteQry);
+			this.theStatement.setInt(1, commentId);
+			
+			// execute the query
+			if (this.theStatement.executeUpdate() > 0) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
+
+	
 
 }

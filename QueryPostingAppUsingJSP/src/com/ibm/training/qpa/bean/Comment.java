@@ -5,6 +5,7 @@ import java.util.Date;
 public class Comment {
 	private int commentId, questionId, commentedBy, upvote;
 	private Date dateCommented;
+	private String comment;
 	public int getCommentId() {
 		return commentId;
 	}
@@ -34,5 +35,11 @@ public class Comment {
 	}
 	public void setDateCommented(Date dateCommented) {
 		this.dateCommented = dateCommented;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

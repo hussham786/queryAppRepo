@@ -78,9 +78,10 @@ $(document).ready(function() {
     
     $('[data-toggle="popover"]').popover();
     
-    $('.close-icon').on('click',function() {
+    /*$('.close-icon').on('click',function() {
 	  $(this).closest('.card').fadeOut();
-	});
+	  $('#unHide').toggle();
+	});*/
     
    /* $('.ans').click(function(){
         $(this).toggle();
@@ -124,7 +125,10 @@ function openEditor(id) {
 	console.log("hiddenVal" + id +" : " + document.getElementById("hiddenVal" + id).value);
 	    if(document.getElementById("hiddenVal" + id).value == 1) {
 	  	  ClassicEditor
-	  	    .create( document.querySelector( '#editor' + id ) )
+	  	    .create( document.querySelector( '#editor' + id ), {
+	  	    	tokenUrl: 'https://40312.cke-cs.com/token/dev/ro7Z1dlDbfKCuNyPOa5wQUKvFiYwff9c0cnVxJg9NCDZae7X0lclsYmBqj4a',
+	            uploadUrl: 'https://40312.cke-cs.com/easyimage/upload/'
+	  	    } )
 	  	    .catch( error => {
 	  	        console.error( error );
 	  	    } );
@@ -133,4 +137,51 @@ function openEditor(id) {
 	    document.getElementById("hiddenVal" + id).value = counter;
 	  
 	//counter++;
+}
+
+function toggleContent(id, contentId){
+	$('#card' + id).fadeOut();
+	$('#unHide' + id).toggle();
+	/*$.ajax({url: "hide?contentId="+contentId, success: function(response){
+	    //$("#showData").html(response);
+	  }});*/
+}
+
+function unHide(id, contentId){
+	$('#card' + id).fadeIn();
+	$('#unHide' + id).toggle();
+	/*$.ajax({url: "unHide?contentId="+contentId, success: function(response){
+	    //$("#showData").html(response);
+	  }});*/
+}
+
+function generateButton(id){
+	var comment = document.getElementById('comment' + id).value;
+	if(comment != null && comment != ""){
+		$('#btnComment' + id).fadeIn();
+	} else {
+		$('#btnComment' + id).fadeOut();
+	}
+}
+
+function postComment(id){
+	var questionId = document.getElementById('questionId' + id).value;
+	var comment = document.getElementById('comment' + id).value;
+	console.log("questionId : " + questionId);
+	console.log("comment : " + comment);
+	$.ajax({url: "addcomment?questionId="+questionId+"&comment="+comment+"&rowId="+id, success: function(response){
+		$("#commDiv" + id).html(response);
+	  }});
+	document.getElementById('comment' + id).value = "";
+}
+
+function deleteComment(commId, id, questionId){
+	//console.log("commentId : " + commId);
+	var commentId = commId.split(",")[0];
+	var rowId = commId.split(",")[1];
+	var quesId = commId.split(",")[2];
+	console.log("commentId : " + commentId);
+	$.ajax({url: "deletecomment?commentId="+commentId+"&questionId="+quesId+"&rowId="+rowId, success: function(response){
+		$("#commDiv" + rowId).html(response);
+	  }});
 }
